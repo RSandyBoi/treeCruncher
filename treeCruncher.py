@@ -17,8 +17,12 @@ class Tree:
         return self.species_code
     def get_height(self):
         return self.height
-    def get_DBH(self):
+    def get_DBH1(self):
         return self.DBH1
+    def get_DBH2(self):
+        return self.DBH2
+    def get_delta(self):
+        return self.delta
     def get_health_status(self):
         return self.health_status
 
