@@ -23,11 +23,11 @@ def main():
             DBH1=row.iloc[6],
             DBH2=row.iloc[7]
         )
+        # values currently hard coded based on known dataset structure, may need to be adjusted for different datasets.
         
         trees = np.append(trees, tree)
         
-    print(f"Total Trees Created: {len(trees)}")
-    print(trees[0].get_id())  # Example: Print ID of the first tree
+    print(f"Total Trees Created: {len(trees)}, ready for analysis.")
         
     ############################    
     #row = dataset.iloc[0]  # Access the first row of the dataset
