@@ -40,58 +40,53 @@ def main():
     #bucketing trees by dbh2
     buckets = np.array([], dtype=object)  # List to hold buckets of trees
     # Create buckets of trees based on DBH2 values, with each bucket containing trees with DBH2 values within a specific range#
+    tree_credit_1 = np.array([], dtype=object)  # Initialize an empty bucket for 1 tree credit
+    tree_credit_1_5 = np.array([], dtype=object)  # Initialize an empty bucket for 1.5 tree credits
+    tree_credit_2 = np.array([], dtype=object)  # Initialize an empty bucket for 2 tree credits
+    tree_credit_2_5 = np.array([], dtype=object)  # Initialize an empty bucket for 2.5 tree credits
+    tree_credit_3 = np.array([], dtype=object)  # Initialize an empty bucket for 3 tree credits
 
-    for tree in sorted_trees:
-        if tree.DBH2 < 10:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 10 <= tree.DBH2 < 20:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 20 <= tree.DBH2 < 30:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 30 <= tree.DBH2 < 40:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 40 <= tree.DBH2 < 50:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 50 <= tree.DBH2 < 60:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 60 <= tree.DBH2 < 70:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 70 <= tree.DBH2 < 80:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 80 <= tree.DBH2 < 90:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        elif 90 <= tree.DBH2 < 100:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
-        else:
-            bucket = np.array([], dtype=object)
-            bucket = np.append(bucket, tree)
-            buckets = np.append(buckets, bucket)
+
+
+    for tree in sorted_trees: # Iterate through each tree in the sorted array to organize into buckets based on DBH2 values, defined by the Federal Way "Tree and Vegetation Retention Requirements" document.
+        if tree.DBH2 <= 6: #1 tree credit
+            tree_credit_1 = np.append(tree_credit_1, tree)
+        elif 6 < tree.DBH2 <= 12: #1.5 tree credits
+            tree_credit_1_5 = np.append(tree_credit_1_5, tree)
+        elif 12 < tree.DBH2 <= 18: #2 tree credits
+            tree_credit_2 = np.append(tree_credit_2, tree)
+        elif 18 < tree.DBH2 <= 24: #2.5 tree credits
+            tree_credit_2_5 = np.append(tree_credit_2_5, tree)
+        elif 24 < tree.DBH2: #3 tree credits
+            tree_credit_3 = np.append(tree_credit_3, tree)
+#buckets with size ranges 0-6, 6-12, 12-18, 18-24, 24+ are created and populated with trees based on their DBH2 values, per Federal Way "Tree and Vegetation Retention Requirements" document. 
+# found here: https://www.federalwaywa.gov/sites/default/files/Documents/Department/CD/Planning/Land%20Use%20Apps%20and%20Info%20Handouts/069%20Tree%20and%20Vegetation%20Retention%20Requirements.pdf
+
+    print("total tree credits: ", len(tree_credit_1) + len(tree_credit_1_5)*1.5 + len(tree_credit_2)*2 + len(tree_credit_2_5)*2.5 + len(tree_credit_3)*3) # Calculate and print the total tree credits based on the number of trees in each bucket and their respective credit values.
+    dbh_delta_values_1 = [tree.delta for tree in tree_credit_1]  # Extract delta values from bucket 1
+    dbh_delta_values_1_5 = [tree.delta for tree in tree_credit_1_5]  # Extract delta values from bucket 1.5
+    dbh_delta_values_2 = [tree.delta for tree in tree_credit_2]
+    dbh_delta_values_2_5 = [tree.delta for tree in tree_credit_2_5]
+    dbh_delta_values_3 = [tree.delta for tree in tree_credit_3]
+
+    dbh_deltas = [dbh_delta_values_1, dbh_delta_values_1_5, dbh_delta_values_2, dbh_delta_values_2_5, dbh_delta_values_3]  # Combine delta values from all buckets into a single list
+    dbh_delta_column_labels = ['bucket_1', 'bucket_1_5', 'bucket_2', 'bucket_2_5', 'bucket_3']  # Create a list of labels for the delta values in each bucket
+    print(f"Average delta for tree credit bracket 1: {np.average(dbh_delta_values_1)}, with bucket size {len(tree_credit_1)} trees, standard deviation of {np.std(dbh_delta_values_1)}")  
+    print(f"Average delta for tree credit bracket 1.5: {np.average(dbh_delta_values_1_5)}, with bucket size {len(tree_credit_1_5)} trees, standard deviation of {np.std(dbh_delta_values_1_5)}")  
+    print(f"Average delta for tree credit bracket 2: {np.average(dbh_delta_values_2)}, with bucket size {len(tree_credit_2)} trees, standard deviation of {np.std(dbh_delta_values_2)}")  
+    print(f"Average delta for tree credit bracket 2.5: {np.average(dbh_delta_values_2_5)}, with bucket size {len(tree_credit_2_5)} trees, standard deviation of {np.std(dbh_delta_values_2_5)}")  
+    print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}")  
     
-    """    
-    #row = dataset.iloc[0]  # Access the first row of the dataset
-    #print(row.iloc[0]) # prints the first element of the first row
-    #EXAMPLE OF HOW TO ACCESS DATA IN THE DATASET
-    """
+    fig, axis = plt.subplots(1,5, figsize=(20,4)) # Create a subplot with 1 row and 5 columns, and select the first subplot
+    for i, (data, label) in enumerate(zip(dbh_deltas, dbh_delta_column_labels)):
+
+        x_values = np.arange(len(data[0])) # Create an array of x values for the scatter plot
+        axis[i].scatter(x_values, data[0], alpha=0.75, color='blue', s=10) # Create a scatter plot for each bucket of delta values
+        axis[i].set_title(label) # Set the title of each subplot to the corresponding bucket label
+        axis[i].set_xlabel('tree bucket size') # Set the x-axis label to 'tree bucket size'
+        axis[i].set_ylabel('frequency') # Set the y-axis label to 'change in DBH'
+    plt.tight_layout()  # Adjust the layout to prevent overlap between subplots
+    plt.show()  # Display the plot
 
 
 
