@@ -3,3 +3,10 @@ This program is designed to take in Tree data from a tree inventory dataset and 
 Made by Ryan Sanderson, for purposes related to Atlas Technical Consultants, Environmental Division.
 
 Made for use with Tacoma Dome Link Extension Data, provided by Katherine Feldmann, collected in the field by Atlas Arborist Staff
+
+Jurisdictions of interest are:
+-Federal Way
+-Tacoma
+-Milton
+-Puyallup
+-WSDOT
