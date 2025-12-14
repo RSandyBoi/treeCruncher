@@ -6,23 +6,34 @@ import treeChar as tc
 from scipy.stats import zscore
 
 
-# Placeholder functions for getting trees from different cities/municipalities, await new data from Katherine
-def get_federal_way_trees(): # Function to get federal way trees
+# #TODO Placeholder functions for getting trees from different cities/municipalities, await new data from Katherine 
+
+#usage:
+#dataset: the dataset to be filtered for the desired city/municipality, should be a sorted (ideal) numpy array of Tree objects 
+#return: a sorted numpy array of Tree objects that match the desired city/municipality
+def get_federal_way_trees(dataset): # Function to get federal way trees
     pass  # Placeholder for the actual implementation
-def get_milton_trees(): # Function to get miltont trees
+def get_milton_trees(dataset): # Function to get miltont trees
     pass  # Placeholder for the actual implementation
-def get_Tacoma_trees(): # Function to get tacoma trees
+def get_Tacoma_trees(dataset): # Function to get tacoma trees
     pass  # Placeholder for the actual implementation  
-def get_puyallup_trees(): # Function to get puyallup trees
+def get_puyallup_trees(dataset): # Function to get puyallup trees
     pass  # Placeholder for the actual implementation
-def get_WSDOT_trees(): # Function to get WSDOT trees
+def get_WSDOT_trees(dataset): # Function to get WSDOT trees
     pass  # Placeholder for the actual implementation
-def get_Pierce_County_trees(): # Function to get pierce county trees
+def get_Pierce_County_trees(dataset): # Function to get pierce county trees
     pass  # Placeholder for the actual implementation
 
 
-
-def  plotter(plot_id, dataset, labels, title, x_label, y_label): # Placeholder function for plotting (to reduce code clutter)
+##TODO Plotter function to create and display a plot for the given dataset and labels, modularized for reusability and for creating multiple independent figures. Improve for stylistic choices
+#Usage: 
+#plot_id: unique identifier for the plot, used to create a new figure for each plot
+#dataset: the dataset to be plotted, which should be a list of lists, where each inner list contains the data for a specific bucket
+#labels: the labels for the x-axis, which should be a list of strings
+#title: the title of the plot, which should be a string
+#x_label: the label for the x-axis, which should be a string
+#y_label: the label for the y-axis, which should be a string
+def  plotter(plot_id, dataset, labels, title, x_label, y_label): 
     plt.figure(plot_id, figsize=(20, 8))  # Create a figure with a specified size
     for y_data, label in zip(dataset, labels):  # Iterate through each bucket's dbh deltas and labels
         for i in y_data:  # Iterate through each delta in the current bucket
@@ -94,6 +105,8 @@ def main():
 #buckets with size ranges 0-6, 6-12, 12-18, 18-24, 24+ are created and populated with trees based on their DBH2 values, per Federal Way "Tree and Vegetation Retention Requirements" document. 
 # found here: https://www.federalwaywa.gov/sites/default/files/Documents/Department/CD/Planning/Land%20Use%20Apps%20and%20Info%20Handouts/069%20Tree%20and%20Vegetation%20Retention%20Requirements.pdf
 
+####^^#TODO Modularize the above bucketing process into a function to be called with different datasets and bucketing criteria, as needed for different cities/municipalities. include documentation for each 
+
     print("total tree credits: ", len(tree_credit_1) + len(tree_credit_1_5)*1.5 + len(tree_credit_2)*2 + len(tree_credit_2_5)*2.5 + len(tree_credit_3)*3) # Calculate and print the total tree credits based on the number of trees in each bucket and their respective credit values.
     dbh_delta_values_1 = [tree.delta for tree in tree_credit_1]  # Extract delta values from bucket 1
     dbh_delta_values_1_5 = [tree.delta for tree in tree_credit_1_5]  # Extract delta values from bucket 1.5
@@ -110,23 +123,15 @@ def main():
     #print(f"Average delta for tree credit bracket 2.5: {np.average(dbh_delta_values_2_5)}, with bucket size {len(tree_credit_2_5)} trees, standard deviation of {np.std(dbh_delta_values_2_5)}")  
     #print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}") 
      
-    
+    ##^Keep above for debugging purposes, but comment out for final version to keep the output clean and focused on the plots. good for reminders of how to utilize numpy functions for statistical analysis.
+
     # Plotting the delta dbh values for each bucket
     plotter(1, dbh_deltas, dbh_delta_column_labels, "Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Delta DBH (inches)")  # Call the plotter function to create and display the plot for delta DBH values by tree credit bracket
     plotter(2, z_scores, dbh_delta_column_labels, "Z-Scores of Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Z-Score")  # Call the plotter function to create and display the plot for z-scores of delta DBH values by tree credit bracket
-    """plt.figure(1,figsize=(20, 8))  # Create a figure with a specified size
-
-    for y_data, label in zip(dbh_deltas, dbh_delta_column_labels):  # Iterate through each bucket's dbh deltas and labels
-        for i in y_data:  # Iterate through each delta in the current bucket
-            plt.scatter(label, i, s=20)  # Plot each delta as a scatter point with the corresponding label
-    plt.title("Delta DBH Values by Tree Credit Bracket")  # Set the title of the plot
-    plt.xlabel("Tree Credit Bracket")  # Set the label for the x-axis
-    plt.ylabel("Delta DBH (inches)")  # Set the label for the y-axis
-    plt.grid(True)  # Add a grid to the plot for better readability"""
+    
     plt.show()  # Display the figure with all subplots
 
 
-#todo: Add functionality for the following cities/municipalities: 
 
 
 
