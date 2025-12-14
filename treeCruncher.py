@@ -77,16 +77,7 @@ def main():
     print(f"Average delta for tree credit bracket 2.5: {np.average(dbh_delta_values_2_5)}, with bucket size {len(tree_credit_2_5)} trees, standard deviation of {np.std(dbh_delta_values_2_5)}")  
     print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}")  
     
-    fig, axis = plt.subplots(1,5, figsize=(20,4)) # Create a subplot with 1 row and 5 columns, and select the first subplot
-    for i, (data, label) in enumerate(zip(dbh_deltas, dbh_delta_column_labels)):
-
-        x_values = np.arange(len(data[0])) # Create an array of x values for the scatter plot
-        axis[i].scatter(x_values, data[0], alpha=0.75, color='blue', s=10) # Create a scatter plot for each bucket of delta values
-        axis[i].set_title(label) # Set the title of each subplot to the corresponding bucket label
-        axis[i].set_xlabel('tree bucket size') # Set the x-axis label to 'tree bucket size'
-        axis[i].set_ylabel('frequency') # Set the y-axis label to 'change in DBH'
-    plt.tight_layout()  # Adjust the layout to prevent overlap between subplots
-    plt.show()  # Display the plot
+   
 
 
 

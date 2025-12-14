@@ -8,4 +8,4 @@ class Tree:
         self.species_code = species_code
         self.DBH1 = float(DBH1)
         self.DBH2 = float(DBH2)
-        self.delta = self.DBH2-self.DBH1 # Calculate the difference between DBH1 and DBH2
+        self.delta = abs(self.DBH2-self.DBH1) # Calculate the difference between DBH1 and DBH2
