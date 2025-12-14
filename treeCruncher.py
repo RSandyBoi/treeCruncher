@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import treeChar as tc
 from scipy.stats import zscore
+import os
 
 
 # #TODO Placeholder functions for getting trees from different cities/municipalities, await new data from Katherine 
@@ -33,34 +34,55 @@ def get_Pierce_County_trees(dataset): # Function to get pierce county trees
 #title: the title of the plot, which should be a string
 #x_label: the label for the x-axis, which should be a string
 #y_label: the label for the y-axis, which should be a string
-def  plotter(plot_id, dataset, labels, title, x_label, y_label): 
+def  scatter_plotter(plot_id, dataset, labels, title, x_label, y_label): 
     plt.figure(plot_id, figsize=(20, 8))  # Create a figure with a specified size
     for y_data, label in zip(dataset, labels):  # Iterate through each bucket's dbh deltas and labels
         for i in y_data:  # Iterate through each delta in the current bucket
-            plt.scatter(label, i, s=20)  # Plot each delta as a scatter point with the corresponding label
+            plt.scatter(label, i, s=20, color = 'blue')  # Plot each delta as a scatter point with the corresponding label
         plt.errorbar(label, np.mean(y_data), yerr=np.std(y_data), fmt='o', color='red', ecolor='red', capsize=5, elinewidth=2)  # Add error bars to the plot
     plt.title(title)  # Set the title of the plot
     plt.xlabel(x_label)  # Set the label for the x-axis
     plt.ylabel(y_label)  # Set the label for the y-axis
     plt.grid(True)  # Add a grid to the plot for better readability
-    
 
+
+    
+def data_filler(filepaths): # Implement the data filler function to load and process data from the provided file paths, returns a Numpy array of Tree objects
+    trees = np.array([], dtype=object)  # Initialize an empty numpy array to hold Tree objects
+    for filepath in filepaths:  # Iterate through each file path in the list of file paths
+        print(f"Loading data from {filepath}...")  # Print a message indicating the file being loaded
+        data = pd.read_csv(filepath, encoding='cp1252')  # Read the CSV file into a pandas DataFrame, encoding set to cp1252 to handle special characters
+        for index, row in data.iterrows():  # Iterate through each row in the DataFrame
+            if pd.isna(row.iloc[0]):  # Data quality check to ensure pure numeric IDs using ID column to indicate end of readable data
+                continue
+            tree = tc.Tree(
+                ID=row['ID'],
+                DBH1=row['DBH (II)'],
+                DBH2=row['DBH (DV)'],
+                stemsInitial=row['Num Stems (II)'],
+                stemsValidated=row['Num Stems (DV)']
+            )  # Create a Tree object for the current row
+            trees = np.append(trees, tree)  # Append the Tree object to the numpy array
+    return trees  # Return the numpy array of Tree objects
 
 
 
 def main():
     print("Tree Cruncher v0.5")
 
-    #* Load dataset *#
-    dataset = pd.read_excel("DBHValidation_11-10-2025_11-11-2025.xlsx")  # Load dataset from Excel file
-    print("Dataset loaded successfully.")
-    
-    
+    target_folder = "./DBH data CSV's"  # target directory for the datasets to be used
+    filenames = os.listdir(target_folder)  # List all files in the target directory
+    print("Files in target folder:", filenames)  # Print the list of files in the target directory
+    file_paths = []  # List to hold the full paths of the files
+    for filename in filenames:  # Iterate through each file in the target directory
+        full_path = os.path.join(target_folder, filename)  # Get the full path of the file
+        file_paths.append(full_path)  # Add the full path to the list of file paths
+
     #* Create Tree objects from dataset *#
-    trees = np.array([], dtype=object)  # List to hold Tree objects
+    trees = data_filler(file_paths)  # List to hold Tree objects
     
     # Iterate through each row in the dataset, create a Tree object for each valid row, and append it to the trees array
-    for index, row in dataset.iterrows():
+    """for index, row in dataset.iterrows():
         if pd.isna(row.iloc[0]): #data QC to ensure pure numeric IDs using ID column to indicate end of readable data
             continue
         tree = tc.Tree(
@@ -70,8 +92,7 @@ def main():
             DBH2=row.iloc[7]
         )
         # values currently hard coded based on known dataset structure, may need to be adjusted for different datasets. Consider csv input option in future to use header names instead
-        
-        trees = np.append(trees, tree)
+        """
         
     print(f"Total Trees Created: {len(trees)}, ready for analysis.")
 
@@ -117,18 +138,13 @@ def main():
     dbh_deltas = [dbh_delta_values_1, dbh_delta_values_1_5, dbh_delta_values_2, dbh_delta_values_2_5, dbh_delta_values_3]  # Combine delta values from all buckets into a single list
     dbh_delta_column_labels = ['bucket 1', 'bucket 1.5', 'bucket 2', 'bucket 2.5', 'bucket 3']  # Create a list of labels for the delta values in each bucket
     z_scores = [zscore(bucket) for bucket in dbh_deltas]  # Calculate the z-scores for the delta values in each bucket
-    #print(f"Average delta for tree credit bracket 1: {np.average(dbh_delta_values_1)}, with bucket size {len(tree_credit_1)} trees, standard deviation of {np.std(dbh_delta_values_1)}")  
-    #print(f"Average delta for tree credit bracket 1.5: {np.average(dbh_delta_values_1_5)}, with bucket size {len(tree_credit_1_5)} trees, standard deviation of {np.std(dbh_delta_values_1_5)}")  
-    #print(f"Average delta for tree credit bracket 2: {np.average(dbh_delta_values_2)}, with bucket size {len(tree_credit_2)} trees, standard deviation of {np.std(dbh_delta_values_2)}")  
-    #print(f"Average delta for tree credit bracket 2.5: {np.average(dbh_delta_values_2_5)}, with bucket size {len(tree_credit_2_5)} trees, standard deviation of {np.std(dbh_delta_values_2_5)}")  
-    #print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}") 
      
     ##^Keep above for debugging purposes, but comment out for final version to keep the output clean and focused on the plots. good for reminders of how to utilize numpy functions for statistical analysis.
 
     # Plotting the delta dbh values for each bucket
-    plotter(1, dbh_deltas, dbh_delta_column_labels, "Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Delta DBH (inches)")  # Call the plotter function to create and display the plot for delta DBH values by tree credit bracket
-    plotter(2, z_scores, dbh_delta_column_labels, "Z-Scores of Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Z-Score")  # Call the plotter function to create and display the plot for z-scores of delta DBH values by tree credit bracket
-    
+    scatter_plotter(1, dbh_deltas, dbh_delta_column_labels, "Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Delta DBH (inches)")  # Call the plotter function to create and display the plot for delta DBH values by tree credit bracket
+    scatter_plotter(2, z_scores, dbh_delta_column_labels, "Z-Scores of Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Z-Score")  # Call the plotter function to create and display the plot for z-scores of delta DBH values by tree credit bracket
+
     plt.show()  # Display the figure with all subplots
 
 
