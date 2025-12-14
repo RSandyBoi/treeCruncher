@@ -82,15 +82,22 @@ def main():
     z_scores = [zscore(bucket) for bucket in dbh_deltas]  # Calculate the z-scores for the delta values in each bucket
      
     
-    # Plotting the z-score values for each bucket
+    # Plotting the delta dbh values for each bucket
     plt.figure(figsize=(20, 8))  # Create a figure with a specified size
 
-    for y_data, label in zip(z_scores, dbh_delta_column_labels):  # Iterate through each bucket's z-scores and labels
-        plt.scatter(z_scores, y_data, label=label)  # Plot the z-scores for the current bucket with the corresponding label  #    plt.xlabel('Tree Index')  # Set the label for the x-axis
+    for y_data, label in zip(dbh_deltas, dbh_delta_column_labels):  # Iterate through each bucket's dbh deltas and labels
+        for i in y_data:  # Iterate through each delta in the current bucket
+            plt.scatter(label, i, s=20)  # Plot each delta as a scatter point with the corresponding label
+        plt.scatter(label=label)
+    plt.title("Delta DBH Values by Tree Credit Bracket")  # Set the title of the plot
+    plt.xlabel("Tree Credit Bracket")  # Set the label for the x-axis
+    plt.ylabel("Delta DBH (inches)")  # Set the label for the y-axis
+    plt.legend()  # Add a legend to the plot
+    plt.grid(True)  # Add a grid to the plot for better readability
     plt.show()  # Display the figure with all subplots
 
 
-
+#todo: Add functionality for the following cities/municipalities: 
 
 
 
