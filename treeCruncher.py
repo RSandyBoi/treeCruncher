@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import treeChar as tc
+from scipy.stats import zscore
 
 def main():
     print("Tree Cruncher v1.0")
@@ -70,14 +71,23 @@ def main():
     dbh_delta_values_3 = [tree.delta for tree in tree_credit_3]
 
     dbh_deltas = [dbh_delta_values_1, dbh_delta_values_1_5, dbh_delta_values_2, dbh_delta_values_2_5, dbh_delta_values_3]  # Combine delta values from all buckets into a single list
-    dbh_delta_column_labels = ['bucket_1', 'bucket_1_5', 'bucket_2', 'bucket_2_5', 'bucket_3']  # Create a list of labels for the delta values in each bucket
+    dbh_delta_column_labels = ['bucket 1', 'bucket 1.5', 'bucket 2', 'bucket 2.5', 'bucket 3']  # Create a list of labels for the delta values in each bucket
     print(f"Average delta for tree credit bracket 1: {np.average(dbh_delta_values_1)}, with bucket size {len(tree_credit_1)} trees, standard deviation of {np.std(dbh_delta_values_1)}")  
     print(f"Average delta for tree credit bracket 1.5: {np.average(dbh_delta_values_1_5)}, with bucket size {len(tree_credit_1_5)} trees, standard deviation of {np.std(dbh_delta_values_1_5)}")  
     print(f"Average delta for tree credit bracket 2: {np.average(dbh_delta_values_2)}, with bucket size {len(tree_credit_2)} trees, standard deviation of {np.std(dbh_delta_values_2)}")  
     print(f"Average delta for tree credit bracket 2.5: {np.average(dbh_delta_values_2_5)}, with bucket size {len(tree_credit_2_5)} trees, standard deviation of {np.std(dbh_delta_values_2_5)}")  
-    print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}")  
+    print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}") 
+
+    print("Z-score calculation for delta values")
+    z_scores = [zscore(bucket) for bucket in dbh_deltas]  # Calculate the z-scores for the delta values in each bucket
+     
     
-   
+    # Plotting the z-score values for each bucket
+    plt.figure(figsize=(20, 8))  # Create a figure with a specified size
+
+    for y_data, label in zip(z_scores, dbh_delta_column_labels):  # Iterate through each bucket's z-scores and labels
+        plt.scatter(z_scores, y_data, label=label)  # Plot the z-scores for the current bucket with the corresponding label  #    plt.xlabel('Tree Index')  # Set the label for the x-axis
+    plt.show()  # Display the figure with all subplots
 
 
 
