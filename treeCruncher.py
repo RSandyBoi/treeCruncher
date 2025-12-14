@@ -5,8 +5,38 @@ import pandas as pd
 import treeChar as tc
 from scipy.stats import zscore
 
+
+# Placeholder functions for getting trees from different cities/municipalities, await new data from Katherine
+def get_federal_way_trees(): # Function to get federal way trees
+    pass  # Placeholder for the actual implementation
+def get_milton_trees(): # Function to get miltont trees
+    pass  # Placeholder for the actual implementation
+def get_Tacoma_trees(): # Function to get tacoma trees
+    pass  # Placeholder for the actual implementation  
+def get_puyallup_trees(): # Function to get puyallup trees
+    pass  # Placeholder for the actual implementation
+def get_WSDOT_trees(): # Function to get WSDOT trees
+    pass  # Placeholder for the actual implementation
+def get_Pierce_County_trees(): # Function to get pierce county trees
+    pass  # Placeholder for the actual implementation
+
+
+
+def  plotter(plot_id, dataset, labels, title, x_label, y_label): # Placeholder function for plotting (to reduce code clutter)
+    plt.figure(plot_id, figsize=(20, 8))  # Create a figure with a specified size
+    for y_data, label in zip(dataset, labels):  # Iterate through each bucket's dbh deltas and labels
+        for i in y_data:  # Iterate through each delta in the current bucket
+            plt.scatter(label, i, s=20)  # Plot each delta as a scatter point with the corresponding label
+    plt.title(title)  # Set the title of the plot
+    plt.xlabel(x_label)  # Set the label for the x-axis
+    plt.ylabel(y_label)  # Set the label for the y-axis
+    plt.grid(True)  # Add a grid to the plot for better readability
+
+
+
+
 def main():
-    print("Tree Cruncher v1.0")
+    print("Tree Cruncher v0.5")
 
     #* Load dataset *#
     dataset = pd.read_excel("DBHValidation_11-10-2025_11-11-2025.xlsx")  # Load dataset from Excel file
@@ -19,7 +49,6 @@ def main():
     # Iterate through each row in the dataset, create a Tree object for each valid row, and append it to the trees array
     for index, row in dataset.iterrows():
         if pd.isna(row.iloc[0]): #data QC to ensure pure numeric IDs using ID column to indicate end of readable data
-            print("Invalid Tree ID encountered, skipping this entry.")
             continue
         tree = tc.Tree(
             ID=row.iloc[0],
@@ -72,28 +101,26 @@ def main():
 
     dbh_deltas = [dbh_delta_values_1, dbh_delta_values_1_5, dbh_delta_values_2, dbh_delta_values_2_5, dbh_delta_values_3]  # Combine delta values from all buckets into a single list
     dbh_delta_column_labels = ['bucket 1', 'bucket 1.5', 'bucket 2', 'bucket 2.5', 'bucket 3']  # Create a list of labels for the delta values in each bucket
-    print(f"Average delta for tree credit bracket 1: {np.average(dbh_delta_values_1)}, with bucket size {len(tree_credit_1)} trees, standard deviation of {np.std(dbh_delta_values_1)}")  
-    print(f"Average delta for tree credit bracket 1.5: {np.average(dbh_delta_values_1_5)}, with bucket size {len(tree_credit_1_5)} trees, standard deviation of {np.std(dbh_delta_values_1_5)}")  
-    print(f"Average delta for tree credit bracket 2: {np.average(dbh_delta_values_2)}, with bucket size {len(tree_credit_2)} trees, standard deviation of {np.std(dbh_delta_values_2)}")  
-    print(f"Average delta for tree credit bracket 2.5: {np.average(dbh_delta_values_2_5)}, with bucket size {len(tree_credit_2_5)} trees, standard deviation of {np.std(dbh_delta_values_2_5)}")  
-    print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}") 
-
-    print("Z-score calculation for delta values")
     z_scores = [zscore(bucket) for bucket in dbh_deltas]  # Calculate the z-scores for the delta values in each bucket
+    #print(f"Average delta for tree credit bracket 1: {np.average(dbh_delta_values_1)}, with bucket size {len(tree_credit_1)} trees, standard deviation of {np.std(dbh_delta_values_1)}")  
+    #print(f"Average delta for tree credit bracket 1.5: {np.average(dbh_delta_values_1_5)}, with bucket size {len(tree_credit_1_5)} trees, standard deviation of {np.std(dbh_delta_values_1_5)}")  
+    #print(f"Average delta for tree credit bracket 2: {np.average(dbh_delta_values_2)}, with bucket size {len(tree_credit_2)} trees, standard deviation of {np.std(dbh_delta_values_2)}")  
+    #print(f"Average delta for tree credit bracket 2.5: {np.average(dbh_delta_values_2_5)}, with bucket size {len(tree_credit_2_5)} trees, standard deviation of {np.std(dbh_delta_values_2_5)}")  
+    #print(f"Average delta for tree credit bracket 3: {np.average(dbh_delta_values_3)}, with bucket size {len(tree_credit_3)} trees, standard deviation of {np.std(dbh_delta_values_3)}") 
      
     
     # Plotting the delta dbh values for each bucket
-    plt.figure(figsize=(20, 8))  # Create a figure with a specified size
+    plotter(1, dbh_deltas, dbh_delta_column_labels, "Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Delta DBH (inches)")  # Call the plotter function to create and display the plot for delta DBH values by tree credit bracket
+    plotter(2, z_scores, dbh_delta_column_labels, "Z-Scores of Delta DBH Values by Tree Credit Bracket", "Tree Credit Bracket", "Z-Score")  # Call the plotter function to create and display the plot for z-scores of delta DBH values by tree credit bracket
+    """plt.figure(1,figsize=(20, 8))  # Create a figure with a specified size
 
     for y_data, label in zip(dbh_deltas, dbh_delta_column_labels):  # Iterate through each bucket's dbh deltas and labels
         for i in y_data:  # Iterate through each delta in the current bucket
             plt.scatter(label, i, s=20)  # Plot each delta as a scatter point with the corresponding label
-        plt.scatter(label=label)
     plt.title("Delta DBH Values by Tree Credit Bracket")  # Set the title of the plot
     plt.xlabel("Tree Credit Bracket")  # Set the label for the x-axis
     plt.ylabel("Delta DBH (inches)")  # Set the label for the y-axis
-    plt.legend()  # Add a legend to the plot
-    plt.grid(True)  # Add a grid to the plot for better readability
+    plt.grid(True)  # Add a grid to the plot for better readability"""
     plt.show()  # Display the figure with all subplots
 
 
