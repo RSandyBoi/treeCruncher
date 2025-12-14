@@ -27,10 +27,12 @@ def  plotter(plot_id, dataset, labels, title, x_label, y_label): # Placeholder f
     for y_data, label in zip(dataset, labels):  # Iterate through each bucket's dbh deltas and labels
         for i in y_data:  # Iterate through each delta in the current bucket
             plt.scatter(label, i, s=20)  # Plot each delta as a scatter point with the corresponding label
+        plt.errorbar(label, np.mean(y_data), yerr=np.std(y_data), fmt='o', color='red', ecolor='red', capsize=5, elinewidth=2)  # Add error bars to the plot
     plt.title(title)  # Set the title of the plot
     plt.xlabel(x_label)  # Set the label for the x-axis
     plt.ylabel(y_label)  # Set the label for the y-axis
     plt.grid(True)  # Add a grid to the plot for better readability
+    
 
 
 
