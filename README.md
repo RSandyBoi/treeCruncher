@@ -4,8 +4,13 @@ Made by Ryan Sanderson, for purposes related to Atlas Technical Consultants, Env
 
 Made for use with Tacoma Dome Link Extension Data, provided by Katherine Feldmann, collected in the field by Atlas Arborist Staff
 
-Jurisdictions of interest are:
--Federal Way
+IMPORTANT:
+Files utilized must be placed in folder within the working directory called "DBH data CSV's", and must be uploaded as CSV's. CSV data must also conform to a standard before being processed, namely it must have the following column headers (Without the {}): {ID}, {DBH (II)}, {DBH (DV)}, {Num Stems(II)}, {Num Stems (DV)}. Additionally, the only string (text) value allowed is the ID column, all other columns must be Integers or Floats.
+
+Failure to do so **Will** result in an error. You have been warned.
+
+#TODO Jurisdictions of interest are:
+-Federal Way (implemented as base case)
 -Tacoma
 -Milton
 -Puyallup
