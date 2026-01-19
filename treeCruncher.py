@@ -12,17 +12,17 @@ import os
 #usage:
 #dataset: the dataset to be filtered for the desired city/municipality, should be a sorted (ideal) numpy array of Tree objects 
 #return: a sorted numpy array of Tree objects that match the desired city/municipality
-def get_federal_way_trees(dataset): # Function to get federal way trees
+def get_federal_way_trees(dataset): # Function to get Federal Way trees
     pass  # Placeholder for the actual implementation
-def get_milton_trees(dataset): # Function to get miltont trees
+def get_milton_trees(dataset): # Function to get Milton trees
     pass  # Placeholder for the actual implementation
-def get_Tacoma_trees(dataset): # Function to get tacoma trees
+def get_Tacoma_trees(dataset): # Function to get Tacoma trees
     pass  # Placeholder for the actual implementation  
-def get_puyallup_trees(dataset): # Function to get puyallup trees
+def get_puyallup_trees(dataset): # Function to get Puyallup trees
     pass  # Placeholder for the actual implementation
 def get_WSDOT_trees(dataset): # Function to get WSDOT trees
     pass  # Placeholder for the actual implementation
-def get_Pierce_County_trees(dataset): # Function to get pierce county trees
+def get_Pierce_County_trees(dataset): # Function to get Pierce County trees
     pass  # Placeholder for the actual implementation
 
 
@@ -63,14 +63,14 @@ def data_filler(filepaths): # Implement the data filler function to load and pro
                 stemsValidated=row['Num Stems (DV)']
             )  # Create a Tree object for the current row
             trees = np.append(trees, tree)  # Append the Tree object to the numpy array
-    return trees  # Return the numpy array of Tree objects
+    return trees  
 
 
 
 def main():
     print("Tree Cruncher v0.5")
 
-    target_folder = "./DBH data CSV's"  # target directory for the datasets to be used
+    target_folder = "./DBH data CSV's"  # target directory for the datasets to be used <----------------------CHANGE PER DIRECTORY CHANGES
     filenames = os.listdir(target_folder)  # List all files in the target directory
     print("Files in target folder:", filenames)  # Print the list of files in the target directory
     file_paths = []  # List to hold the full paths of the files
@@ -79,20 +79,9 @@ def main():
         file_paths.append(full_path)  # Add the full path to the list of file paths
 
     #* Create Tree objects from dataset *#
-    trees = data_filler(file_paths)  # List to hold Tree objects
+    trees = data_filler(file_paths)  
+
     
-    # Iterate through each row in the dataset, create a Tree object for each valid row, and append it to the trees array
-    """for index, row in dataset.iterrows():
-        if pd.isna(row.iloc[0]): #data QC to ensure pure numeric IDs using ID column to indicate end of readable data
-            continue
-        tree = tc.Tree(
-            ID=row.iloc[0],
-            species_code=row.iloc[2],
-            DBH1=row.iloc[6],
-            DBH2=row.iloc[7]
-        )
-        # values currently hard coded based on known dataset structure, may need to be adjusted for different datasets. Consider csv input option in future to use header names instead
-        """
         
     print(f"Total Trees Created: {len(trees)}, ready for analysis.")
 
